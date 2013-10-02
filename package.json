@@ -1,0 +1,17 @@
+{
+  "name": "simpleTask",
+  "version": "0.0.0",
+  "description": "Centralized tasklist with HTTP and CLI manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "entomb",
+  "license": "MIT",
+  "dependencies":{
+        "express":"~3.*",
+ 	      "swig":"~1.*",
+        "colors":"~0.6.*",
+        "socket.io":"*"
+  }
+}

@@ -1,0 +1,93 @@
+#!/bin/bash
+
+URL='express.dev:3000'
+
+
+function die {
+    echo ""
+    echo ""
+    exit
+}
+
+function helper {
+    echo "simpleTask is a node.js tasklist manager."
+    echo ""
+    echo "usage: task [text]"
+    echo "       task [-option][-option ID]"
+    echo ""
+    echo "Options"
+    echo "    TEXT,            If no flags are set, will create a new task"
+    echo "    -l, -list,       list all tasks"
+    echo "    -flush,          delete all tasks"
+    echo "    -purge,          delete completed tasks"
+    echo ""
+    echo "    -r ID,           remove task with from ID"
+    echo "    -i ID,           moar info about the task"
+    echo ""
+    echo "    -do,   -x ID,    mark task ID as done"
+    echo "    -undo, -u ID,    mark task ID as undone"
+    echo ""
+    die
+}
+
+
+
+
+if [ "$1" == "" ]
+    then
+        echo "Loading tasks. use -h for help"
+        curl -X GET $URL/cli
+        die
+fi
+if [ "$1" == "-h" ]
+    then helper
+fi
+if [ "$1" == "-list" ] || [ "$1" == "-l" ]
+    then
+        echo "Loading tasks"
+        curl -X GET $URL/cli
+        die
+fi
+if [ "$1" == "-r" ]
+    then
+        echo "Removing task $2"
+        curl -X POST $URL/cli/$2/delete
+        die
+fi
+if [ "$1" == "-x" ] || [ "$1" == "-do" ]
+    then
+        echo "marking task $2 as done"
+        curl -X POST $URL/cli/$2/state/true
+        die
+fi
+if [ "$1" == "-u" ]  || [ "$1" == "-undo" ]
+    then
+        echo "marking task $2 as undone"
+        curl -X POST $URL/cli/$2/state/false
+        die
+fi
+if [ "$1" == "-i" ]
+    then
+        echo "Loading task $2"
+        curl -X GET $URL/cli/$2
+        die
+fi
+if [ "$1" == "-purge" ]
+    then
+        echo "sending flush command"
+        curl -X POST $URL/cli/purge
+        die
+fi
+if [ "$1" == "-flush" ]
+    then
+        echo "sending flush command"
+        curl -X POST $URL/cli/flush
+        die
+fi
+
+
+TASK="$@"
+echo "sending new task"
+curl -X POST --data "t=$TASK" $URL/cli
+die
+
