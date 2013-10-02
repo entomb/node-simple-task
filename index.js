@@ -1,19 +1,29 @@
 /**
- * @app Simple Tasks
+ * @app SimpleTask
  *
  */
-
 var express = require('express');
 var app = express();
+
+/**
+ * socket.io magic
+ */
 var server = require('http').createServer(app);
 global.io = require('socket.io').listen(server);
-
 server.listen(8081);
 console.log('sockets on port 8081');
 
+
+/**
+ * load interfaces
+ */
 var TaskListCLI = require('./lib/cli.js');
 var TaskListWEB = require('./lib/web.js');
 
+
+/**
+ * Middlewares
+ */
 app.use(express.bodyParser());
 app.use(function(req,res,next){
     TaskListCLI.response = res;
@@ -23,9 +33,13 @@ app.use(function(req,res,next){
     next();
 });
 
-app.get('/',function(req,res){
-   TaskListWEB.index();
-});
+
+/**
+ * Append WEB routes
+ */
+    app.get('/',function(req,res){
+       TaskListWEB.index();
+    });
 
 
 
